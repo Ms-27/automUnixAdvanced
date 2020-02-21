@@ -1,5 +1,12 @@
 #!/bin/bash
 
+echo "Choisir le nombre d'élèves dans la classe:"
+read nbr_eleves
+if [ "$nbr_eleves" = "it's over" ]; then
+    echo "error 42"
+    exit 42
+fi
+
 saisie() {
     echo "Rentrer le ${1} de l'élève:"
     while [ ${#var} -gt 10 ] || [[ "${var:0:1}" =~ [[:lower:]] ]] || [ -z "$var" ]; do
@@ -21,12 +28,16 @@ var=""
 saisie prenom
 prenom=$var
 
-echo "Rentrer la note (0-100):"
-read note
-
+note="255"
+echo "Rentrer la note de l'élève (0-100):"
 while [ $note -gt 100 ] || [ $note -lt 0 ]; do
-    echo "Non conforme, rentrer à nouveau:"
     read note
+    if [ "$note" = "it's over" ]; then
+            echo "error 42"
+            exit 42
+    elif [ $note -gt 100 ] || [ $note -lt 0 ]; then
+        echo "Non conforme, rentrer à nouveau:"
+    fi
 done
 
 case $note in
@@ -38,4 +49,8 @@ case $note in
     *)                          appr="Problème";;
 esac
 
+echo $nom $prenom $note/100: $appr
 echo $nom $prenom $note/100: $appr >> eleve.txt
+if [ "$?" = "0" ]; then
+    echo "Opération réussie"
+fi
